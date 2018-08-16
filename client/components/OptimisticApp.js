@@ -23,14 +23,8 @@ class OptimisticApp extends React.Component {
         <section className="todoapp">
           <header className="header">
             <h1>
-              todos
+              Be Optimistic
             </h1>
-            <TodoTextInput
-              autoFocus={true}
-              className="new-todo"
-              onSave={this._handleTextInputSave}
-              placeholder="What needs to be done?"
-            />
           </header>
           <List viewer={this.props.viewer} />
         </section>

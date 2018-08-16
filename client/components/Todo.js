@@ -72,19 +72,9 @@ class Todo extends React.Component {
           editing: this.state.isEditing,
         })}>
         <div className="view">
-          <input
-            checked={this.props.todo.complete}
-            className="toggle"
-            onChange={this._handleCompleteChange}
-            type="checkbox"
-          />
           <label onDoubleClick={this._handleLabelDoubleClick}>
             {this.props.todo.text}
           </label>
-          <button
-            className="destroy"
-            onClick={this._handleDestroyClick}
-          />
         </div>
         {this.state.isEditing && this.renderTextInput()}
       </li>

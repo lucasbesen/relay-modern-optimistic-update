@@ -21,15 +21,6 @@ class List extends React.Component {
     const numCompletedTodos = this.props.viewer.completedCount;
     return (
       <section className="main">
-        <input
-          checked={numTodos === numCompletedTodos}
-          className="toggle-all"
-          onChange={() => console.log('oioi')}
-          type="checkbox"
-        />
-        <label htmlFor="toggle-all">
-          Mark all as complete
-        </label>
         <ul className="todo-list">
           {this.renderTodos()}
         </ul>
