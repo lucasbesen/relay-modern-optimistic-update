@@ -16,6 +16,7 @@ class OptimisticApp extends React.Component {
   };
   render() {
     const hasTodos = this.props.viewer.totalCount > 0;
+    console.log('oioioioioi');
     return (
       <div>
         <section className="todoapp">

@@ -14,6 +14,8 @@ import {
   graphql,
 } from 'react-relay';
 
+import OptimisticApp from './components/OptimisticApp';
+
 function fetchQuery(
   operation,
   variables,
