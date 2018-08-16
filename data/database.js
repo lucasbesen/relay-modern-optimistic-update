@@ -1,4 +1,4 @@
-export class Todo {}
+export class Post {}
 export class User {}
 
 // Mock authenticated ID
@@ -11,30 +11,30 @@ const usersById = {
   [VIEWER_ID]: viewer,
 };
 
-// Mock todo data
-const todosById = {};
-const todoIdsByUser = {
+// Mock posts data
+const postsById = {};
+const postIdsByUser = {
   [VIEWER_ID]: [],
 };
-let nextTodoId = 0;
-addTodo('Item', 0);
+let nextPostId = 0;
+addPost('Item', 0);
 
-export function addTodo(text, likes) {
-  const todo = new Todo();
-  todo.id = `${nextTodoId++}`;
-  todo.text = text;
-  todo.likes = likes;
-  todosById[todo.id] = todo;
-  todoIdsByUser[VIEWER_ID].push(todo.id);
-  return todo.id;
+export function addPost(text, likes) {
+  const post = new Post();
+  post.id = `${nextPostId++}`;
+  post.text = text;
+  post.likes = likes;
+  postsById[post.id] = post;
+  postIdsByUser[VIEWER_ID].push(post.id);
+  return post.id;
 }
 
-export function getTodo(id) {
-  return todosById[id];
+export function getPost(id) {
+  return postsById[id];
 }
 
-export function getTodos(status = 'any') {
-  return todoIdsByUser[VIEWER_ID].map(id => todosById[id]);
+export function getPosts() {
+  return postIdsByUser[VIEWER_ID].map(id => postsById[id]);
 }
 
 export function getUser(id) {
@@ -46,6 +46,6 @@ export function getViewer() {
 }
 
 export function updateLikes(id) {
-  const todo = getTodo(id);
-  todo.likes = todo.likes + 1;
+  const post = getPost(id);
+  post.likes = post.likes + 1;
 }

@@ -5,7 +5,7 @@ import {
 } from 'react-relay';
 import styled from 'styled-components';
 
-import List from './List';
+import PostList from './PostList';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -21,9 +21,9 @@ class OptimisticApp extends React.Component {
     return (
       <AppWrapper>
         <Title>Without Optimistic</Title>
-        <List viewer={this.props.viewer} useOptimisticResponse={false} />
+        <PostList viewer={this.props.viewer} useOptimisticResponse={false} />
         <Title>With Optimistic</Title>
-        <List viewer={this.props.viewer} useOptimisticResponse={true} />
+        <PostList viewer={this.props.viewer} useOptimisticResponse={true} />
       </AppWrapper>
     );
   }
@@ -33,7 +33,7 @@ export default createFragmentContainer(OptimisticApp, {
   viewer: graphql`
     fragment OptimisticApp_viewer on User {
       id,
-      ...List_viewer,
+      ...PostList_viewer,
     }
   `,
 });

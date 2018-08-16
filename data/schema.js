@@ -2,7 +2,6 @@ import {
     GraphQLBoolean,
     GraphQLID,
     GraphQLInt,
-    GraphQLList,
     GraphQLNonNull,
     GraphQLObjectType,
     GraphQLSchema,
@@ -13,26 +12,19 @@ import {
     connectionArgs,
     connectionDefinitions,
     connectionFromArray,
-    cursorForObjectInConnection,
     fromGlobalId,
     globalIdField,
     mutationWithClientMutationId,
     nodeDefinitions,
-    toGlobalId,
   } from 'graphql-relay';
   
   import {
-    Todo,
+    Post,
     User,
-    addTodo,
-    changeTodoStatus,
-    getTodo,
-    getTodos,
+    getPost,
+    getPosts,
     getUser,
     getViewer,
-    markAllTodos,
-    removeCompletedTodos,
-    removeTodo,
     updateLikes,
   } from './database';
 
@@ -41,16 +33,16 @@ import {
   const {nodeInterface, nodeField} = nodeDefinitions(
     (globalId) => {
       const {type, id} = fromGlobalId(globalId);
-      if (type === 'Todo') {
-        return getTodo(id);
+      if (type === 'Post') {
+        return getPost(id);
       } else if (type === 'User') {
         return getUser(id);
       }
       return null;
     },
     (obj) => {
-      if (obj instanceof Todo) {
-        return GraphQLTodo;
+      if (obj instanceof Post) {
+        return GraphQLPost;
       } else if (obj instanceof User) {
         return GraphQLUser;
       }
@@ -58,10 +50,10 @@ import {
     }
   );
   
-  const GraphQLTodo = new GraphQLObjectType({
-    name: 'Todo',
+  const GraphQLPost = new GraphQLObjectType({
+    name: 'Post',
     fields: {
-      id: globalIdField('Todo'),
+      id: globalIdField('Post'),
       text: {
         type: GraphQLString,
         resolve: (obj) => obj.text,
@@ -79,19 +71,19 @@ import {
   });
   
   const {
-    connectionType: TodosConnection,
-    edgeType: GraphQLTodoEdge,
+    connectionType: PostsConnection,
+    edgeType: GraphQLPostEdge,
   } = connectionDefinitions({
-    name: 'Todo',
-    nodeType: GraphQLTodo,
+    name: 'Post',
+    nodeType: GraphQLPost,
   });
   
   const GraphQLUser = new GraphQLObjectType({
     name: 'User',
     fields: {
       id: globalIdField('User'),
-      todos: {
-        type: TodosConnection,
+      posts: {
+        type: PostsConnection,
         args: {
           status: {
             type: GraphQLString,
@@ -100,15 +92,15 @@ import {
           ...connectionArgs,
         },
         resolve: (obj, {status, ...args}) =>
-          connectionFromArray(getTodos(status), args),
+          connectionFromArray(getPosts(status), args),
       },
       totalCount: {
         type: GraphQLInt,
-        resolve: () => getTodos().length,
+        resolve: () => getPosts().length,
       },
       completedCount: {
         type: GraphQLInt,
-        resolve: () => getTodos('completed').length,
+        resolve: () => getPosts('completed').length,
       },
     },
     interfaces: [nodeInterface],
@@ -125,147 +117,29 @@ import {
     },
   });
   
-  const GraphQLAddTodoMutation = mutationWithClientMutationId({
-    name: 'AddTodo',
-    inputFields: {
-      text: { type: new GraphQLNonNull(GraphQLString) },
-    },
-    outputFields: {
-      todoEdge: {
-        type: GraphQLTodoEdge,
-        resolve: ({localTodoId}) => {
-          const todo = getTodo(localTodoId);
-          return {
-            cursor: cursorForObjectInConnection(getTodos(), todo),
-            node: todo,
-          };
-        },
-      },
-      viewer: {
-        type: GraphQLUser,
-        resolve: () => getViewer(),
-      },
-    },
-    mutateAndGetPayload: ({text}) => {
-      const localTodoId = addTodo(text);
-      return {localTodoId};
-    },
-  });
-  
-  const GraphQLChangeTodoStatusMutation = mutationWithClientMutationId({
-    name: 'ChangeTodoStatus',
-    inputFields: {
-      complete: { type: new GraphQLNonNull(GraphQLBoolean) },
-      id: { type: new GraphQLNonNull(GraphQLID) },
-    },
-    outputFields: {
-      todo: {
-        type: GraphQLTodo,
-        resolve: ({localTodoId}) => getTodo(localTodoId),
-      },
-      viewer: {
-        type: GraphQLUser,
-        resolve: () => getViewer(),
-      },
-    },
-    mutateAndGetPayload: ({id, complete}) => {
-      const localTodoId = fromGlobalId(id).id;
-      changeTodoStatus(localTodoId, complete);
-      return {localTodoId};
-    },
-  });
-  
-  const GraphQLMarkAllTodosMutation = mutationWithClientMutationId({
-    name: 'MarkAllTodos',
-    inputFields: {
-      complete: { type: new GraphQLNonNull(GraphQLBoolean) },
-    },
-    outputFields: {
-      changedTodos: {
-        type: new GraphQLList(GraphQLTodo),
-        resolve: ({changedTodoLocalIds}) => changedTodoLocalIds.map(getTodo),
-      },
-      viewer: {
-        type: GraphQLUser,
-        resolve: () => getViewer(),
-      },
-    },
-    mutateAndGetPayload: ({complete}) => {
-      const changedTodoLocalIds = markAllTodos(complete);
-      return {changedTodoLocalIds};
-    },
-  });
-  
-  // TODO: Support plural deletes
-  const GraphQLRemoveCompletedTodosMutation = mutationWithClientMutationId({
-    name: 'RemoveCompletedTodos',
-    outputFields: {
-      deletedTodoIds: {
-        type: new GraphQLList(GraphQLString),
-        resolve: ({deletedTodoIds}) => deletedTodoIds,
-      },
-      viewer: {
-        type: GraphQLUser,
-        resolve: () => getViewer(),
-      },
-    },
-    mutateAndGetPayload: () => {
-      const deletedTodoLocalIds = removeCompletedTodos();
-      const deletedTodoIds = deletedTodoLocalIds.map(toGlobalId.bind(null, 'Todo'));
-      return {deletedTodoIds};
-    },
-  });
-  
-  const GraphQLRemoveTodoMutation = mutationWithClientMutationId({
-    name: 'RemoveTodo',
-    inputFields: {
-      id: { type: new GraphQLNonNull(GraphQLID) },
-    },
-    outputFields: {
-      deletedTodoId: {
-        type: GraphQLID,
-        resolve: ({id}) => id,
-      },
-      viewer: {
-        type: GraphQLUser,
-        resolve: () => getViewer(),
-      },
-    },
-    mutateAndGetPayload: ({id}) => {
-      const localTodoId = fromGlobalId(id).id;
-      removeTodo(localTodoId);
-      return {id};
-    },
-  });
-  
   const GraphQLUpdateLikesMutation = mutationWithClientMutationId({
     name: 'UpdateLikes',
     inputFields: {
       id: { type: new GraphQLNonNull(GraphQLID) },
     },
     outputFields: {
-      todo: {
-        type: GraphQLTodo,
-        resolve: ({localTodoId}) => getTodo(localTodoId),
+      post: {
+        type: GraphQLPost,
+        resolve: ({localPostId}) => getPost(localPostId),
       },
     },
     mutateAndGetPayload: async ({id}) => {
-      const localTodoId = fromGlobalId(id).id;
-      updateLikes(localTodoId);
+      const localPostId = fromGlobalId(id).id;
+      updateLikes(localPostId);
       // simulate a server delay
       await sleep(1000);
-      return {localTodoId};
+      return {localPostId};
     },
   });
   
   const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-      addTodo: GraphQLAddTodoMutation,
-      changeTodoStatus: GraphQLChangeTodoStatusMutation,
-      markAllTodos: GraphQLMarkAllTodosMutation,
-      removeCompletedTodos: GraphQLRemoveCompletedTodosMutation,
-      removeTodo: GraphQLRemoveTodoMutation,
       updateLikes: GraphQLUpdateLikesMutation,
     },
   });

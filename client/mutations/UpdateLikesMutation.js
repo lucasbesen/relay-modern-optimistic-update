@@ -6,7 +6,7 @@ import {
   const mutation = graphql`
     mutation UpdateLikesMutation($input: UpdateLikesInput!) {
       updateLikes(input:$input) {
-        todo {
+        post {
           id
           likes
         }
@@ -14,11 +14,11 @@ import {
     }
   `;
   
-  function getOptimisticResponse(likes, todo) {
+  function getOptimisticResponse(likes, post) {
     return {
       updateLikes: {
-        todo: {
-          id: todo.id,
+        post: {
+          id: post.id,
           likes: likes,
         },
       },
@@ -28,7 +28,7 @@ import {
   function commit(
     environment,
     likes,
-    todo,
+    post,
     useOptimisticResponse,
   ) {
     return commitMutation(
@@ -36,9 +36,9 @@ import {
       {
         mutation,
         variables: {
-          input: {id: todo.id},
+          input: {id: post.id},
         },
-        optimisticResponse: useOptimisticResponse ? getOptimisticResponse(likes, todo) : null,
+        optimisticResponse: useOptimisticResponse ? getOptimisticResponse(likes, post) : null,
       }
     );
   }

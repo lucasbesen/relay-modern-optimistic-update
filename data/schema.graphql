@@ -1,43 +1,4 @@
-input AddTodoInput {
-  text: String!
-  clientMutationId: String
-}
-
-type AddTodoPayload {
-  todoEdge: TodoEdge
-  viewer: User
-  clientMutationId: String
-}
-
-input ChangeTodoStatusInput {
-  complete: Boolean!
-  id: ID!
-  clientMutationId: String
-}
-
-type ChangeTodoStatusPayload {
-  todo: Todo
-  viewer: User
-  clientMutationId: String
-}
-
-input MarkAllTodosInput {
-  complete: Boolean!
-  clientMutationId: String
-}
-
-type MarkAllTodosPayload {
-  changedTodos: [Todo]
-  viewer: User
-  clientMutationId: String
-}
-
 type Mutation {
-  addTodo(input: AddTodoInput!): AddTodoPayload
-  changeTodoStatus(input: ChangeTodoStatusInput!): ChangeTodoStatusPayload
-  markAllTodos(input: MarkAllTodosInput!): MarkAllTodosPayload
-  removeCompletedTodos(input: RemoveCompletedTodosInput!): RemoveCompletedTodosPayload
-  removeTodo(input: RemoveTodoInput!): RemoveTodoPayload
   updateLikes(input: UpdateLikesInput!): UpdateLikesPayload
 }
 
@@ -62,6 +23,32 @@ type PageInfo {
   endCursor: String
 }
 
+type Post implements Node {
+  """The ID of an object"""
+  id: ID!
+  text: String
+  likes: Int
+  complete: Boolean
+}
+
+"""A connection to a list of items."""
+type PostConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PostEdge]
+}
+
+"""An edge in a connection."""
+type PostEdge {
+  """The item at the end of the edge"""
+  node: Post
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
 type Query {
   viewer: User
 
@@ -72,67 +59,20 @@ type Query {
   ): Node
 }
 
-input RemoveCompletedTodosInput {
-  clientMutationId: String
-}
-
-type RemoveCompletedTodosPayload {
-  deletedTodoIds: [String]
-  viewer: User
-  clientMutationId: String
-}
-
-input RemoveTodoInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type RemoveTodoPayload {
-  deletedTodoId: ID
-  viewer: User
-  clientMutationId: String
-}
-
-type Todo implements Node {
-  """The ID of an object"""
-  id: ID!
-  text: String
-  likes: Int
-  complete: Boolean
-}
-
-"""A connection to a list of items."""
-type TodoConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [TodoEdge]
-}
-
-"""An edge in a connection."""
-type TodoEdge {
-  """The item at the end of the edge"""
-  node: Todo
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
 input UpdateLikesInput {
   id: ID!
   clientMutationId: String
 }
 
 type UpdateLikesPayload {
-  todo: Todo
+  post: Post
   clientMutationId: String
 }
 
 type User implements Node {
   """The ID of an object"""
   id: ID!
-  todos(status: String = "any", after: String, first: Int, before: String, last: Int): TodoConnection
+  posts(status: String = "any", after: String, first: Int, before: String, last: Int): PostConnection
   totalCount: Int
   completedCount: Int
 }
