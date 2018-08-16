@@ -1,8 +1,7 @@
 {
   "name": "relay-modern-optimistic-update",
   "version": "1.0.0",
-  "description": "Relay Modern Optimistic Update examples",
-  "main": "index.js",
+  "description": "Benchmark of updating data with/without Relay Modern optimistic update",
   "scripts": {
     "start": "babel-node ./server.js",
     "build": "relay-compiler --src ./client/ --schema ./data/schema.graphql",

@@ -20,7 +20,7 @@ Update schema
 yarn update-schema
 ```
 
-Build relay generated files
+Build Relay generated files
 
 ```
 yarn build
