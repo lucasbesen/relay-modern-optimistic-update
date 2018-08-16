@@ -13,16 +13,13 @@ class List extends React.Component {
         key={edge.node.id}
         todo={edge.node}
         viewer={this.props.viewer}
+        useOptimisticResponse={this.props.useOptimisticResponse}
       />
     );
-  }
+  } 
   render() {
     return (
-      <section className="main">
-        <ul className="todo-list">
-          {this.renderTodos()}
-        </ul>
-      </section>
+      <div>{this.renderTodos()}</div>
     );
   }
 }

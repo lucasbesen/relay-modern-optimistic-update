@@ -1,33 +1,30 @@
-import TodoTextInput from './TodoTextInput';
-
 import React from 'react';
 import {
   createFragmentContainer,
   graphql,
 } from 'react-relay';
+import styled from 'styled-components';
 
 import List from './List';
 
+const AppWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const Title = styled.h1``;
+
 class OptimisticApp extends React.Component {
-  _handleTextInputSave = (text) => {
-    AddTodoMutation.commit(
-      this.props.relay.environment,
-      text,
-      this.props.viewer,
-    );
-  };
   render() {
     return (
-      <div>
-        <section className="todoapp">
-          <header className="header">
-            <h1>
-              Be Optimistic
-            </h1>
-          </header>
-          <List viewer={this.props.viewer} />
-        </section>
-      </div>
+      <AppWrapper>
+        <Title>Without Optimistic</Title>
+        <List viewer={this.props.viewer} useOptimisticResponse={false} />
+        <Title>With Optimistic</Title>
+        <List viewer={this.props.viewer} useOptimisticResponse={true} />
+      </AppWrapper>
     );
   }
 }

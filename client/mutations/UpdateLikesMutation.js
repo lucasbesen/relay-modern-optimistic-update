@@ -4,22 +4,22 @@ import {
   } from 'react-relay';
   
   const mutation = graphql`
-    mutation RenameTodoMutation($input: RenameTodoInput!) {
-      renameTodo(input:$input) {
+    mutation UpdateLikesMutation($input: UpdateLikesInput!) {
+      updateLikes(input:$input) {
         todo {
           id
-          text
+          likes
         }
       }
     }
   `;
   
-  function getOptimisticResponse(text, todo) {
+  function getOptimisticResponse(likes, todo) {
     return {
-      renameTodo: {
+      updateLikes: {
         todo: {
           id: todo.id,
-          text: text,
+          likes: likes,
         },
       },
     };
@@ -27,17 +27,18 @@ import {
   
   function commit(
     environment,
-    text,
-    todo
+    likes,
+    todo,
+    useOptimisticResponse,
   ) {
     return commitMutation(
       environment,
       {
         mutation,
         variables: {
-          input: {text, id: todo.id},
+          input: {id: todo.id},
         },
-        optimisticResponse: getOptimisticResponse(text, todo),
+        optimisticResponse: useOptimisticResponse ? getOptimisticResponse(likes, todo) : null,
       }
     );
   }

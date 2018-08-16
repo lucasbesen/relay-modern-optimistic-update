@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/lucasbesen/relay-optimistic-update#readme",
   "dependencies": {
+    "@material-ui/core": "^1.5.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-relay": "^1.6.2",
@@ -30,12 +31,14 @@
     "classnames": "^2.2.6",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
+    "file-loader": "^1.1.11",
     "graphql": "^0.13.2",
     "graphql-relay": "^0.5.5",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-relay": "^1.6.2",
+    "styled-components": "^3.4.2",
     "webpack": "^4.16.5",
     "webpack-dev-server": "^3.1.5"
   },

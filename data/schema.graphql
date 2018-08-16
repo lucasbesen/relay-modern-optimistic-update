@@ -38,7 +38,7 @@ type Mutation {
   markAllTodos(input: MarkAllTodosInput!): MarkAllTodosPayload
   removeCompletedTodos(input: RemoveCompletedTodosInput!): RemoveCompletedTodosPayload
   removeTodo(input: RemoveTodoInput!): RemoveTodoPayload
-  renameTodo(input: RenameTodoInput!): RenameTodoPayload
+  updateLikes(input: UpdateLikesInput!): UpdateLikesPayload
 }
 
 """An object with an ID"""
@@ -93,21 +93,11 @@ type RemoveTodoPayload {
   clientMutationId: String
 }
 
-input RenameTodoInput {
-  id: ID!
-  text: String!
-  clientMutationId: String
-}
-
-type RenameTodoPayload {
-  todo: Todo
-  clientMutationId: String
-}
-
 type Todo implements Node {
   """The ID of an object"""
   id: ID!
   text: String
+  likes: Int
   complete: Boolean
 }
 
@@ -127,6 +117,16 @@ type TodoEdge {
 
   """A cursor for use in pagination"""
   cursor: String!
+}
+
+input UpdateLikesInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type UpdateLikesPayload {
+  todo: Todo
+  clientMutationId: String
 }
 
 type User implements Node {

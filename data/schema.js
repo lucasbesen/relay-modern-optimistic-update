@@ -33,8 +33,10 @@ import {
     markAllTodos,
     removeCompletedTodos,
     removeTodo,
-    renameTodo,
+    updateLikes,
   } from './database';
+
+  import { sleep } from '../helpers';
   
   const {nodeInterface, nodeField} = nodeDefinitions(
     (globalId) => {
@@ -63,6 +65,10 @@ import {
       text: {
         type: GraphQLString,
         resolve: (obj) => obj.text,
+      },
+      likes: {
+        type: GraphQLInt,
+        resolve: (obj) => obj.likes,
       },
       complete: {
         type: GraphQLBoolean,
@@ -232,11 +238,10 @@ import {
     },
   });
   
-  const GraphQLRenameTodoMutation = mutationWithClientMutationId({
-    name: 'RenameTodo',
+  const GraphQLUpdateLikesMutation = mutationWithClientMutationId({
+    name: 'UpdateLikes',
     inputFields: {
       id: { type: new GraphQLNonNull(GraphQLID) },
-      text: { type: new GraphQLNonNull(GraphQLString) },
     },
     outputFields: {
       todo: {
@@ -244,9 +249,11 @@ import {
         resolve: ({localTodoId}) => getTodo(localTodoId),
       },
     },
-    mutateAndGetPayload: ({id, text}) => {
+    mutateAndGetPayload: async ({id}) => {
       const localTodoId = fromGlobalId(id).id;
-      renameTodo(localTodoId, text);
+      updateLikes(localTodoId);
+      // simulate a server delay
+      await sleep(1000);
       return {localTodoId};
     },
   });
@@ -259,7 +266,7 @@ import {
       markAllTodos: GraphQLMarkAllTodosMutation,
       removeCompletedTodos: GraphQLRemoveCompletedTodosMutation,
       removeTodo: GraphQLRemoveTodoMutation,
-      renameTodo: GraphQLRenameTodoMutation,
+      updateLikes: GraphQLUpdateLikesMutation,
     },
   });
   
