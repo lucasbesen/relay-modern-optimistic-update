@@ -6,7 +6,7 @@
 
 ---
 
-![Alt text](https://github.com/lucasbesen/relay-optimistic-update/blob/master/benchmark.gif)
+![Alt text](https://github.com/lucasbesen/relay-modern-optimistic-update/blob/master/benchmark.gif)
 
 First, install everything
 
