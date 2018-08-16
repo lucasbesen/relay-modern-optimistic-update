@@ -4,7 +4,9 @@
   "description": "Relay Optimistic Update examples",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "babel-node ./server.js",
+    "build": "relay-compiler --src ./js/ --schema ./data/schema.graphql",
+    "update-schema": "babel-node ./scripts/updateSchema.js"
   },
   "repository": {
     "type": "git",
