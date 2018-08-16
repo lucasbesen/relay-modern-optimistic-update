@@ -42,7 +42,7 @@ export default createFragmentContainer(OptimisticApp, {
     fragment OptimisticApp_viewer on User {
       id,
       totalCount,
-      ...TodoList_viewer,
+      ...List_viewer,
     }
   `,
 });

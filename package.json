@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node ./server.js",
-    "build": "relay-compiler --src ./js/ --schema ./data/schema.graphql",
+    "build": "relay-compiler --src ./client/ --schema ./data/schema.graphql",
     "update-schema": "babel-node ./scripts/updateSchema.js"
   },
   "repository": {
@@ -27,10 +27,12 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-runtime": "^6.26.0",
+    "classnames": "^2.2.6",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
     "graphql-relay": "^0.5.5",
+    "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-relay": "^1.6.2",
