@@ -23,7 +23,6 @@ class Post extends React.Component {
   handleUpdateLike = () => {
     UpdateLikesMutation.commit(
       this.props.relay.environment,
-      this.props.post.likes + 1,
       this.props.post,
       this.props.useOptimisticResponse,
     );
@@ -46,15 +45,12 @@ export default createFragmentContainer(Post, {
     fragment Post_post on Post {
       complete,
       id,
-      text,
       likes,
     }
   `,
   viewer: graphql`
     fragment Post_viewer on User {
       id,
-      totalCount,
-      completedCount,
     }
   `,
 });

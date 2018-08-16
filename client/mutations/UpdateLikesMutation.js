@@ -27,7 +27,6 @@ import {
   
   function commit(
     environment,
-    likes,
     post,
     useOptimisticResponse,
   ) {
@@ -38,7 +37,7 @@ import {
         variables: {
           input: {id: post.id},
         },
-        optimisticResponse: useOptimisticResponse ? getOptimisticResponse(likes, post) : null,
+        optimisticResponse: useOptimisticResponse ? getOptimisticResponse(post.likes + 1, post) : null,
       }
     );
   }
