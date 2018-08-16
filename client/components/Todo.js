@@ -12,27 +12,11 @@ class Todo extends React.Component {
   state = {
     isEditing: false,
   };
-  _handleCompleteChange = (e) => {
-    const complete = e.target.checked;
-    ChangeTodoStatusMutation.commit(
-      this.props.relay.environment,
-      complete,
-      this.props.todo,
-      this.props.viewer,
-    );
-  };
-  _handleDestroyClick = () => {
-    this._removeTodo();
-  };
   _handleLabelDoubleClick = () => {
     this._setEditMode(true);
   };
   _handleTextInputCancel = () => {
     this._setEditMode(false);
-  };
-  _handleTextInputDelete = () => {
-    this._setEditMode(false);
-    this._removeTodo();
   };
   _handleTextInputSave = (text) => {
     this._setEditMode(false);
@@ -42,13 +26,6 @@ class Todo extends React.Component {
       this.props.todo,
     );
   };
-  _removeTodo() {
-    RemoveTodoMutation.commit(
-      this.props.relay.environment,
-      this.props.todo,
-      this.props.viewer,
-    );
-  }
   _setEditMode = (shouldEdit) => {
     this.setState({isEditing: shouldEdit});
   };
@@ -68,7 +45,6 @@ class Todo extends React.Component {
     return (
       <li
         className={classnames({
-          completed: this.props.todo.complete,
           editing: this.state.isEditing,
         })}>
         <div className="view">

@@ -15,7 +15,6 @@ export default class TodoTextInput extends React.Component {
     commitOnBlur: PropTypes.bool.isRequired,
     initialValue: PropTypes.string,
     onCancel: PropTypes.func,
-    onDelete: PropTypes.func,
     onSave: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
   };
@@ -28,9 +27,7 @@ export default class TodoTextInput extends React.Component {
   }
   _commitChanges = () => {
     const newText = this.state.text.trim();
-    if (this.props.onDelete && newText === '') {
-      this.props.onDelete();
-    } else if (this.props.onCancel && newText === this.props.initialValue) {
+    if (this.props.onCancel && newText === this.props.initialValue) {
       this.props.onCancel();
     } else if (newText !== '') {
       this.props.onSave(newText);

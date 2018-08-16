@@ -17,12 +17,11 @@ const todoIdsByUser = {
   [VIEWER_ID]: [],
 };
 let nextTodoId = 0;
-addTodo('Taste JavaScript', true);
-addTodo('Buy a unicorn', false);
+addTodo('Without Optimistic Update');
+addTodo('With Optimistic Update');
 
-export function addTodo(text, complete) {
+export function addTodo(text) {
   const todo = new Todo();
-  todo.complete = !!complete;
   todo.id = `${nextTodoId++}`;
   todo.text = text;
   todosById[todo.id] = todo;
@@ -30,21 +29,12 @@ export function addTodo(text, complete) {
   return todo.id;
 }
 
-export function changeTodoStatus(id, complete) {
-  const todo = getTodo(id);
-  todo.complete = complete;
-}
-
 export function getTodo(id) {
   return todosById[id];
 }
 
 export function getTodos(status = 'any') {
-  const todos = todoIdsByUser[VIEWER_ID].map(id => todosById[id]);
-  if (status === 'any') {
-    return todos;
-  }
-  return todos.filter(todo => todo.complete === (status === 'completed'));
+  return todoIdsByUser[VIEWER_ID].map(id => todosById[id]);
 }
 
 export function getUser(id) {
@@ -53,31 +43,6 @@ export function getUser(id) {
 
 export function getViewer() {
   return getUser(VIEWER_ID);
-}
-
-export function markAllTodos(complete) {
-  const changedTodos = [];
-  getTodos().forEach(todo => {
-    if (todo.complete !== complete) {
-      todo.complete = complete;
-      changedTodos.push(todo);
-    }
-  });
-  return changedTodos.map(todo => todo.id);
-}
-
-export function removeTodo(id) {
-  const todoIndex = todoIdsByUser[VIEWER_ID].indexOf(id);
-  if (todoIndex !== -1) {
-    todoIdsByUser[VIEWER_ID].splice(todoIndex, 1);
-  }
-  delete todosById[id];
-}
-
-export function removeCompletedTodos() {
-  const todosToRemove = getTodos().filter(todo => todo.complete);
-  todosToRemove.forEach(todo => removeTodo(todo.id));
-  return todosToRemove.map(todo => todo.id);
 }
 
 export function renameTodo(id, text) {

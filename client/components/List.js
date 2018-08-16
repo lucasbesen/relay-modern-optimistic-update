@@ -17,8 +17,6 @@ class List extends React.Component {
     );
   }
   render() {
-    const numTodos = this.props.viewer.totalCount;
-    const numCompletedTodos = this.props.viewer.completedCount;
     return (
       <section className="main">
         <ul className="todo-list">
@@ -33,19 +31,16 @@ export default createFragmentContainer(List, {
   viewer: graphql`
     fragment List_viewer on User {
       todos(
-        first: 2147483647  # max GraphQLInt
+        first: 2
       ) @connection(key: "List_todos") {
         edges {
           node {
             id,
-            complete,
             ...Todo_todo,
           },
         },
       },
       id,
-      totalCount,
-      completedCount,
       ...Todo_viewer,
     }
   `,

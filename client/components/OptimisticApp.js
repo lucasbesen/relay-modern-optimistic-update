@@ -17,7 +17,6 @@ class OptimisticApp extends React.Component {
     );
   };
   render() {
-    const hasTodos = this.props.viewer.totalCount > 0;
     return (
       <div>
         <section className="todoapp">
@@ -37,7 +36,6 @@ export default createFragmentContainer(OptimisticApp, {
   viewer: graphql`
     fragment OptimisticApp_viewer on User {
       id,
-      totalCount,
       ...List_viewer,
     }
   `,
