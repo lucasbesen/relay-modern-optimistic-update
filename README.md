@@ -2,7 +2,7 @@
 
 ##### Simple benchmark of updating data with/without Relay Modern optimistic update
 
-#### Medium Post: 
+#### Medium Post: https://medium.com/@lucas.besen/relay-modern-optimistic-update-a09ba22d83c9
 
 ---
 
